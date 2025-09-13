@@ -36,4 +36,15 @@ public class Board
     }
 
 
+    public boolean isEmpty(int x, int y)
+    {
+        return cells.get(x).get(y) == null;
+    }
+
+    public void updateBoard(BoardCell move)
+    {
+        int x = move.getX();
+        int y = move.getY();
+        cells.get(x).get(y).setSymbol(move.getSymbol());
+    }
 }

@@ -1,8 +1,8 @@
 package TicTacToe;
 
-import TicTacToe.Models.Board;
-import TicTacToe.Models.BoardCell;
-import TicTacToe.Models.Game;
+import TicTacToe.Exceptions.InvalidPlayersException;
+import TicTacToe.Models.*;
+import TicTacToe.Strategies.Playing.RandomPlayingStrategy;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -12,9 +12,32 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class TicTacToeTest
 {
+    private static final int BOARD_SIZE = 3; //Screaming case
     @Test
-    public void testCreateGame()
-    {
+    public void testCreateGame() throws InvalidPlayersException {
+        /*Board board = new Board(BOARD_SIZE); // Magic numbers == hard coded
+         Game game = new Game(board,  GameStatus.IN_PROGRESS);
+
+        Game.Builder gameBuilder = new Game.Builder();
+         */
+       /* We can make the implementation better by using Builder method for Players as well
+        Game game = Game.builder()
+                .withSize(BOARD_SIZE)
+                .withPlayer(new HumanPlayer(GameSymbol.O, new User()))
+                .withPlayer(new BotPlayer(GameSymbol.O, GameLevel.EASY, new RandomPlayingStrategy()))
+                .build();
+
+        */
+
+        Game game = Game.builder()
+                .withSize(BOARD_SIZE)
+                .withPlayer(HumanPlayer.builder().symbol(GameSymbol.X).user(new User()).build())
+                .withPlayer(BotPlayer.builder().symbol(GameSymbol.O).level(GameLevel.EASY).playingStrategy(new RandomPlayingStrategy()).build())
+                .build();
+
+
+        assertEquals(2, game.getPlayers().size(), "If the game is created, it should have two players");
+
 
     }
 
