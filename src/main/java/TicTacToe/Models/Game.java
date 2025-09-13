@@ -48,7 +48,7 @@ public class Game
         // 8. Check for a winner
 
         if(checkWinner()) {
-            status = GameStatus.FINISHED
+            status = GameStatus.FINISHED;
         }
         // 9. Check for a draw
 
