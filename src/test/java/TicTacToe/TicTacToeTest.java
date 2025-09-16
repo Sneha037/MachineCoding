@@ -31,7 +31,7 @@ public class TicTacToeTest
 
         Game game = Game.builder()
                 .withSize(BOARD_SIZE)
-                .withPlayer(HumanPlayer.builder().symbol(GameSymbol.X).user(new User()).build())
+                .withPlayer(HumanPlayer.builder().symbol(GameSymbol.X).user(new User("Sneha", "t", null)).build())
                 .withPlayer(BotPlayer.builder().symbol(GameSymbol.O).level(GameLevel.EASY).playingStrategy(new RandomPlayingStrategy()).build())
                 .build();
 

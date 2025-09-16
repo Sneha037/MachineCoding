@@ -30,15 +30,23 @@ public class Board
             List<BoardCell> cells = new ArrayList<>
         }*/
 
-        List<BoardCell> firstRow = Collections.nCopies(size, new BoardCell());
-        List<List<BoardCell>> cell = Collections.nCopies(size, firstRow);
-        return cell;
+        List<List<BoardCell>> grid = new ArrayList<>();
+
+        for (int i = 0; i < size; i++) {
+            List<BoardCell> row = new ArrayList<>();
+            for (int j = 0; j < size; j++) {
+                row.add(new BoardCell(i, j)); // each cell is unique
+            }
+            grid.add(row);
+        }
+
+        return grid;
     }
 
 
     public boolean isEmpty(int x, int y)
     {
-        return cells.get(x).get(y) == null;
+        return cells.get(x).get(y).getSymbol() == null;
     }
 
     public void updateBoard(BoardCell move)
@@ -46,5 +54,34 @@ public class Board
         int x = move.getX();
         int y = move.getY();
         cells.get(x).get(y).setSymbol(move.getSymbol());
+       // printBoard();
+    }
+
+    public void printBoard()
+    {
+        for (int i = 0; i < cells.size(); ++i)
+        {
+            for (int j = 0; j < cells.size(); ++j)
+            {
+                GameSymbol symbol = cells.get(i).get(j).getSymbol();
+
+                if (symbol == null) {
+                    System.out.printf(" | - | ");
+                } else {
+                    System.out.printf(" | " + symbol + " | ");
+                }
+            }
+            System.out.println();
+        }
+    }
+
+    public List<BoardCell> getAvailableCells()
+    {
+        //return cells.stream().flatMap(array -> array.stream())
+
+        return cells.stream()
+                .flatMap(List::stream)
+                .filter(cell -> cell.getSymbol() == null)
+                .toList();
     }
 }

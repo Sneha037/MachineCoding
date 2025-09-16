@@ -21,6 +21,9 @@ public class BotPlayer extends Player
 
     public BoardCell makeMove(Board board)
     {
-        return playingStrategy.makeMove(board);
+        BoardCell cell = playingStrategy.makeMove(board);
+        cell.setSymbol(getSymbol());
+
+        return cell;
     }
 }

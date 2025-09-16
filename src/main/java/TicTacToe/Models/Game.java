@@ -2,6 +2,10 @@ package TicTacToe.Models;
 
 import TicTacToe.Exceptions.InvalidMoveException;
 import TicTacToe.Exceptions.InvalidPlayersException;
+import TicTacToe.Strategies.Winning.ColumnWinningStrategy;
+import TicTacToe.Strategies.Winning.DiagonalWinningStrategy;
+import TicTacToe.Strategies.Winning.RowWinningStrategy;
+import TicTacToe.Strategies.Winning.WinningStrategy;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,13 +32,16 @@ public class Game
 
     private int nextPlayerIndex = 0;
 
+    private Player winner;
+
+    private List<WinningStrategy> strategy = List.of(new RowWinningStrategy(), new ColumnWinningStrategy(), new DiagonalWinningStrategy());
+
     private Game()
     {
         //private constructor
     }
 
-    public void makeMove()
-    {
+    public void makeMove() throws InvalidPlayersException {
         // 1. Get the next player
         // 2. Get the move from the player
         BoardCell move = getNextMove();
@@ -47,14 +54,18 @@ public class Game
         board.updateBoard(move);
         // 8. Check for a winner
 
-        if(checkWinner()) {
+        if(checkWinner(move.getSymbol()))
+        {
             status = GameStatus.FINISHED;
+            winner = getNextPlayer();
+            return;
         }
         // 9. Check for a draw
 
         if(checkDraw())
         {
             status = GameStatus.DRAW;
+            return;
         }
         // This very well looks like a monster method
 
@@ -62,6 +73,14 @@ public class Game
         nextPlayerIndex = (nextPlayerIndex + 1)%NO_OF_PLAYERS;
 
 
+    }
+
+    private BoardCell getNextMove()
+    {
+        Player player = players.get(nextPlayerIndex);
+        BoardCell move = player.makeMove(board);
+        validateMove(move);
+        return move;
     }
 
     private void validateMove(BoardCell move)
@@ -72,23 +91,34 @@ public class Game
             throw new InvalidMoveException("This is an invalid move, my child!");
     }
 
-    private BoardCell getNextMove()
-    {
-        Player player = players.get(nextPlayerIndex);
-        BoardCell move = player.makeMove(board);
-        validateMove(move);
-        return player.makeMove(board);
-    }
-
     public void startGame()
     {
+        // Assign a random value to the nextPlayerIndex
+        //Set the status to IN_PROGRESS;
+        nextPlayerIndex = 0; //(int)(Math.random() * players.size());
 
+        status = GameStatus.IN_PROGRESS;
     }
 
-    private boolean checkWinner()
+    public Player getNextPlayer() throws InvalidPlayersException
     {
+        return players.get(nextPlayerIndex);
+    }
+
+    private boolean checkWinner(GameSymbol symbol)
+    {
+        //Implement check rows
+        //return strategy.checkWinner(board, symbol);
+
+        for(WinningStrategy strategy : strategy)
+        {
+            if(strategy.checkWinner(board, symbol) == true)
+                return  true;
+        }
+
         return false;
     }
+
 
     private boolean checkDraw()
     {
